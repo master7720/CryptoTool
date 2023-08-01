@@ -1,14 +1,32 @@
 package com.master7720.encrypter;
 
-import jdk.internal.dynalink.support.NameCodec;
-
-import java.util.Arrays;
-
 public class Base85Encrypter {
     public static String encrypt(String text) {
-        byte[] bytesToEncrypt = text.getBytes();
-        NameCodec Base85 = null;
-        byte[] encryptedBytes = NameCodec.encode(Arrays.toString(bytesToEncrypt)).getBytes();
-        return new String(encryptedBytes);
+        byte[] data = text.getBytes();
+        int length = data.length;
+
+        // Pad the input data to a multiple of 4 bytes if needed
+        int remainder = length % 4;
+        if (remainder != 0) {
+            byte[] paddedData = new byte[length + 4 - remainder];
+            System.arraycopy(data, 0, paddedData, 0, length);
+            data = paddedData;
+            length = data.length;
+        }
+
+        StringBuilder encryptedText = new StringBuilder();
+        for (int i = 0; i < length; i += 4) {
+            int value = ((data[i] & 0xFF) << 24) | ((data[i + 1] & 0xFF) << 16) | ((data[i + 2] & 0xFF) << 8) | (data[i + 3] & 0xFF);
+            for (int j = 4; j >= 0; j--) {
+                int index = value % 85;
+                encryptedText.append(base85Character(index));
+                value /= 85;
+            }
+        }
+        return encryptedText.toString();
+    }
+
+    private static char base85Character(int value) {
+        return (char) (value + 33);
     }
 }

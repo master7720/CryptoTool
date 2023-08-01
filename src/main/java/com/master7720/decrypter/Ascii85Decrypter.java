@@ -23,6 +23,8 @@ public class Ascii85Decrypter {
                     count = 0;
                     value = 0;
                 }
+            } else {
+                throw new IllegalArgumentException("Invalid character in Ascii85 encoded text.");
             }
         }
 

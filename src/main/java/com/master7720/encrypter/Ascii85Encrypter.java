@@ -2,6 +2,10 @@ package com.master7720.encrypter;
 
 public class Ascii85Encrypter {
     public static String encrypt(String text) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("Input text cannot be null or empty.");
+        }
+
         StringBuilder encryptedText = new StringBuilder();
         int count = 0;
         int value = 0;

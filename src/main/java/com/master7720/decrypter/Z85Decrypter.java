@@ -12,10 +12,11 @@ public class Z85Decrypter {
             long value = 0;
             for (int j = 0; j < 5; j++) {
                 char c = encryptedText.charAt(i + j);
-                if (c < 33 || c > 117) {
+                int code = c - 33;
+                if (code < 0 || code > 84) {
                     throw new IllegalArgumentException("Invalid character in Z85 encoded text.");
                 }
-                value = value * 85 + (c - 33);
+                value = value * 85 + code;
             }
             for (int j = 0; j < 4; j++) {
                 byte b = (byte) (value >> (3 - j) * 8);

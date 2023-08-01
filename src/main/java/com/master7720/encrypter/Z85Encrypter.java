@@ -5,7 +5,7 @@ public class Z85Encrypter {
         byte[] data = text.getBytes();
         int length = data.length;
 
-        // Pad the input data to a multiple of 4 bytes
+        // Pad the input data to a multiple of 4 bytes if needed
         int remainder = length % 4;
         if (remainder != 0) {
             byte[] paddedData = new byte[length + 4 - remainder];
