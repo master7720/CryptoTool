@@ -3,14 +3,18 @@ plugins {
 }
 
 group 'com.master7720'
-version '1.0-SNAPSHOT'
+version '1.0-ALPHA'
 
 repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation 'commons-codec:commons-codec:1.15'
+}
+
 jar {
     manifest {
-        attributes 'Main-Class': 'com.master7720.main'
+        attributes 'Main-Class': 'com.master7720.Main'
     }
 }
