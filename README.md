@@ -7,8 +7,8 @@ A modern encryption and decryption tool for most commercial encryptions.
 # How to use(command line only)
 
 # Encrypt
-java -jar JavaEncryptDecrypt.jar encrypt base64(can be change to anything) "Hello, World!"
+java -jar CrytoTool.jar encrypt base64(can be change to anything) "Hello, World!"
 
 # Decrypt
-java -jar JavaEncryptDecrypt.jar decrypt base64(can be change to anything) "SGVsbG8sIFdvcmxkIQ=="
+java -jar CrytoTool.jar decrypt base64(can be change to anything) "SGVsbG8sIFdvcmxkIQ=="
 
