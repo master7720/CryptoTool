@@ -1,16 +1,14 @@
+# WARNING
+this software is in alpha some stuff might break or just not work feel free to make an issue or a pr,
+
 # JavaEncrypterDecrypter
-uses base64 and caesar to encrypted and decrypted
+A modern encryption and decryption tool for most commercial encryptions.
 
 # How to use(command line only)
 
-# Encrypt using base64
-java -jar Base64EncryptDecrypt.jar encrypt base64 "Hello, World!"
+# Encrypt
+java -jar JavaEncryptDecrypt.jar encrypt base64(can be change to anything) "Hello, World!"
 
-# Encrypt using caesar cipher
-java -jar Base64EncryptDecrypt.jar encrypt caesar "Hello, World!"
+# Decrypt
+java -jar JavaEncryptDecrypt.jar decrypt base64(can be change to anything) "SGVsbG8sIFdvcmxkIQ=="
 
-# Decrypt using base64
-java -jar Base64EncryptDecrypt.jar decrypt base64 "SGVsbG8sIFdvcmxkIQ=="
-
-# Decrypt using caesar cipher
-java -jar Base64EncryptDecrypt.jar decrypt caesar "Khoor, Zruog!"
