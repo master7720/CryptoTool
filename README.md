@@ -24,9 +24,11 @@ CryptoTool is a modern encryption and decryption tool that supports various comm
 ### Encrypt
 
 To encrypt a message, use the following command:
+
 java -jar CryptoTool.jar <any supported encrypter> encrypt "Add Your Text Here"
 
 ### Decrypt
 
 To decrypt a message, use the following command:
+
 java -jar CryptoTool.jar <any supported decrypter> decrypt "Add Your Text Here"
