@@ -1,14 +1,29 @@
-# WARNING
-this software is in alpha some stuff might break or just not work feel free to make an issue or a pr,
+# CryptoTool
 
-# JavaEncrypterDecrypter
-A modern encryption and decryption tool for most commercial encryptions.
+**WARNING: This software is in alpha; some features might break or not work as expected. Feel free to report any issues or contribute through issues and pull requests.**
 
-# How to use(command line only)
+CryptoTool is a modern encryption and decryption tool that supports various commercial encryptions.
 
-# Encrypt
-java -jar CrytoTool.jar encrypt base64(can be change to anything) "Hello, World!"
+## Supported Encrypters
 
-# Decrypt
-java -jar CrytoTool.jar decrypt base64(can be change to anything) "SGVsbG8sIFdvcmxkIQ=="
+1. AES (Advanced Encryption Standard)
+2. Triple DES (Data Encryption Standard)
+3. RSA (Rivest–Shamir–Adleman)
+4. Base64 Encoding
+5. Base85 Encoding
+6. ROT13 Encoding
+7. Vigenere Cipher
+8. Z85 Encoding
+9. Ascii85 Encoding
 
+## How to Use (Command Line)
+
+### Encrypt
+
+To encrypt a message, use the following command:
+java -jar CryptoTool.jar <any supported encrypter> encrypt "Add Your Text Here"
+
+### Decrypt
+
+To decrypt a message, use the following command:
+java -jar CryptoTool.jar <any supported decrypter> decrypt "Add Your Text Here"
