@@ -2,8 +2,6 @@ package com.master7720;
 
 import com.master7720.decrypter.*;
 import com.master7720.encrypter.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -13,47 +11,15 @@ public class Main {
             System.exit(1);
         }
 
-        String command = args[0].toLowerCase();
-        if (command.equals("help")) {
-            displayHelp();
-            System.exit(0);
-        }
+        String type = args[0].toLowerCase();
+        String text = args[1];
 
-        String type = args[1].toLowerCase();
-        String text = args[2];
+        String encryptedText = encrypt(type, text);
+        String decryptedText = decrypt(type, encryptedText);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2); // Create a thread pool with 2 threads
-
-        Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdown));
-
-        switch (command) {
-            case "encrypt":
-                executorService.execute(() -> {
-                    try {
-                        String encryptedText = encrypt(type, text);
-                        System.out.println("Encrypted: " + encryptedText);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error during encryption.", e);
-                    }
-                });
-                break;
-
-            case "decrypt":
-                executorService.execute(() -> {
-                    try {
-                        String decryptedText = decrypt(type, text);
-                        System.out.println("Decrypted: " + decryptedText);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error during decryption.", e);
-                    }
-                });
-                break;
-
-            default:
-                System.out.println("Invalid command. Use 'encrypt' or 'decrypt'.");
-                displayUsage();
-                System.exit(1);
-        }
+        System.out.println("Original Text: " + text);
+        System.out.println("Encrypted: " + encryptedText);
+        System.out.println("Decrypted: " + decryptedText);
     }
 
     public static String encrypt(String type, String text) throws Exception {
@@ -107,6 +73,8 @@ public class Main {
                 return Base16Decrypter.decrypt(encryptedText);
             case BASE85:
                 return Base85Decrypter.decrypt(encryptedText);
+            case ROT13:
+                return ROT13Decrypter.decrypt(encryptedText);
             case QUOTED_PRINTABLE:
                 return QuotedPrintableDecrypter.decrypt(encryptedText);
             case ASCII85:
@@ -137,18 +105,11 @@ public class Main {
     }
 
     public static void displayUsage() {
-        System.out.println("Usage: java -jar <jar-file-name>.jar <command> <type> <text>");
-        System.out.println("Commands: encrypt, decrypt, help");
+        System.out.println("Usage: java -jar <jar-file-name>.jar <type> <text>");
         System.out.println("Types: base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des, octal, hexa, binary, arbitary_radix, triple_des");
     }
 
     public static void displayHelp() {
-        displayUsage();
-        System.out.println("\nDescription:");
-        System.out.println("The EncryptionDecryption program allows you to encrypt or decrypt text using different encryption types.");
-        System.out.println("\nExamples:");
-        System.out.println("java -jar <jar-file-name>.jar encrypt base64 'Hello, World!'");
-        System.out.println("java -jar <jar-file-name>.jar decrypt base64 'Khoor, Zruog!'");
     }
 
     private enum EncryptionType {

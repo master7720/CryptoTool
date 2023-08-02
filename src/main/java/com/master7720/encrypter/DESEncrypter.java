@@ -8,22 +8,24 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class DESEncrypter {
-    private static final ThreadLocal<SecretKey> secretKeyThreadLocal = new ThreadLocal<>();
+    private static SecretKey secretKey;
 
-    public DESEncrypter() throws NoSuchAlgorithmException {
-        if (secretKeyThreadLocal.get() == null) {
-            // Generate DES secret key only if not already generated for this thread
+    static {
+        try {
+            // Generate DES secret key
             KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
             SecureRandom secureRandom = new SecureRandom();
             keyGenerator.init(secureRandom);
-            secretKeyThreadLocal.set(keyGenerator.generateKey());
+            secretKey = keyGenerator.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Failed to initialize DES key.", e);
         }
     }
 
-    public static String encrypt(String text) throws Exception {
-        Cipher cipher = Cipher.getInstance("DES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeyThreadLocal.get());
+    public static String encrypt(String text) {
         try {
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             byte[] encryptedBytes = cipher.doFinal(text.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {

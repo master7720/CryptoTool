@@ -1,11 +1,6 @@
 package com.master7720.encrypter;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class Ascii85Encrypter {
-    private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     private static final int CHUNK_SIZE = 100;
 
     public static String encrypt(String text) {
@@ -13,24 +8,14 @@ public class Ascii85Encrypter {
             throw new IllegalArgumentException("Input text cannot be null or empty.");
         }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
         StringBuilder encryptedText = new StringBuilder();
+        int textLength = text.length();
 
-        try {
-            int textLength = text.length();
-            for (int i = 0; i < textLength; i += CHUNK_SIZE) {
-                int endIndex = Math.min(i + CHUNK_SIZE, textLength);
-                String chunk = text.substring(i, endIndex);
-                Future<String> future = executorService.submit(() -> encryptChunk(chunk));
-                try {
-                    String encryptedChunk = future.get();
-                    encryptedText.append(encryptedChunk);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        } finally {
-            executorService.shutdown();
+        for (int i = 0; i < textLength; i += CHUNK_SIZE) {
+            int endIndex = Math.min(i + CHUNK_SIZE, textLength);
+            String chunk = text.substring(i, endIndex);
+            String encryptedChunk = encryptChunk(chunk);
+            encryptedText.append(encryptedChunk);
         }
 
         return encryptedText.toString();

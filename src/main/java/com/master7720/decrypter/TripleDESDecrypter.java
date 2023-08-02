@@ -6,23 +6,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class TripleDESDecrypter {
     private static final String ALGORITHM = "DESede";
 
     public static String decrypt(String key, String encryptedText) throws Exception {
-        ExecutorService decryptExecutor = Executors.newSingleThreadExecutor();
-        try {
-            Future<String> future = decryptExecutor.submit(() -> {
-                return performDecryption(key, encryptedText);
-            });
-            return future.get();
-        } finally {
-            decryptExecutor.shutdown();
-        }
+        return performDecryption(key, encryptedText);
     }
 
     private static String performDecryption(String key, String encryptedText) {
