@@ -2,8 +2,11 @@ package com.master7720;
 
 import com.master7720.decrypter.*;
 import com.master7720.encrypter.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
         if (args.length < 3) {
             displayUsage();
@@ -19,15 +22,33 @@ public class Main {
         String type = args[1].toLowerCase();
         String text = args[2];
 
+        ExecutorService executorService = Executors.newFixedThreadPool(2); // Create a thread pool with 2 threads
+
+        Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdown));
+
         switch (command) {
             case "encrypt":
-                String encryptedText = encrypt(type, text);
-                System.out.println("Encrypted: " + encryptedText);
+                executorService.execute(() -> {
+                    try {
+                        String encryptedText = encrypt(type, text);
+                        System.out.println("Encrypted: " + encryptedText);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error during encryption.", e);
+                    }
+                });
                 break;
+
             case "decrypt":
-                String decryptedText = decrypt(type, text);
-                System.out.println("Decrypted: " + decryptedText);
+                executorService.execute(() -> {
+                    try {
+                        String decryptedText = decrypt(type, text);
+                        System.out.println("Decrypted: " + decryptedText);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error during decryption.", e);
+                    }
+                });
                 break;
+
             default:
                 System.out.println("Invalid command. Use 'encrypt' or 'decrypt'.");
                 displayUsage();
@@ -36,65 +57,89 @@ public class Main {
     }
 
     public static String encrypt(String type, String text) throws Exception {
-        switch (type) {
-            case EncryptionType.BASE64:
+        EncryptionType encryptionType = EncryptionType.fromString(type);
+
+        switch (encryptionType) {
+            case BASE64:
                 return Base64Encrypter.encrypt(text);
-            case EncryptionType.ROT13:
+            case ROT13:
                 return ROT13Encrypter.encrypt(text);
-            case EncryptionType.BASE16:
+            case BASE16:
                 return Base16Encrypter.encrypt(text);
-            case EncryptionType.BASE85:
+            case BASE85:
                 return Base85Encrypter.encrypt(text);
-            case EncryptionType.QUOTED_PRINTABLE:
+            case QUOTED_PRINTABLE:
                 return QuotedPrintableEncrypter.encrypt(text);
-            case EncryptionType.ASCII85:
+            case ASCII85:
                 return Ascii85Encrypter.encrypt(text);
-            case EncryptionType.Z85:
+            case Z85:
                 return Z85Encrypter.encrypt(text);
-            case EncryptionType.AES:
+            case AES:
                 return AESEncrypter.encrypt(text);
-            case EncryptionType.RSA:
+            case BINARY:
+                return BinaryEncrypter.encrypt(text);
+            case RSA:
                 return RSAEncrypter.encrypt(text);
-            case EncryptionType.DES:
+            case TRIPLE_DES:
+                return TripleDESEncrypter.encrypt(text);
+            case DES:
                 return DESEncrypter.encrypt(text);
-            case EncryptionType.VIGENERE:
+            case HEXA:
+                return HexaEncrypter.encrypt(text);
+            case OCTAL:
+                return OctalEncrypter.encrypt(text);
+            case ARBITRARY_RADIX:
+                return ArbitraryRadixEncrypter.encrypt(text);
+            case VIGENERE:
                 return VigenereEncrypter.encrypt(text, "SECRET_KEY");
             default:
-                throw new IllegalArgumentException("Invalid decryption type. Use 'base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des");
+                throw new IllegalArgumentException("Invalid Encryption type. Use 'base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des, octal, hexa, binary, arbitary_radix, triple_des'");
         }
     }
 
     public static String decrypt(String type, String encryptedText) throws Exception {
-        switch (type) {
-            case EncryptionType.BASE64:
+        EncryptionType encryptionType = EncryptionType.fromString(type);
+
+        switch (encryptionType) {
+            case BASE64:
                 return Base64Decrypter.decrypt(encryptedText);
-            case EncryptionType.BASE16:
+            case BASE16:
                 return Base16Decrypter.decrypt(encryptedText);
-            case EncryptionType.BASE85:
+            case BASE85:
                 return Base85Decrypter.decrypt(encryptedText);
-            case EncryptionType.QUOTED_PRINTABLE:
+            case QUOTED_PRINTABLE:
                 return QuotedPrintableDecrypter.decrypt(encryptedText);
-            case EncryptionType.ASCII85:
+            case ASCII85:
                 return Ascii85Decrypter.decrypt(encryptedText);
-            case EncryptionType.Z85:
+            case Z85:
                 return Z85Decrypter.decrypt(encryptedText);
-            case EncryptionType.AES:
+            case AES:
                 return AESDecrypter.decrypt(encryptedText);
-            case EncryptionType.RSA:
+            case RSA:
                 return RSADecrypter.decrypt(encryptedText);
-            case EncryptionType.DES:
+            case DES:
                 return DESDecrypter.decrypt(encryptedText);
-            case EncryptionType.VIGENERE:
+            case TRIPLE_DES:
+                return TripleDESDecrypter.decrypt(encryptedText);
+            case BINARY:
+                return BinaryDecrypter.decrypt(encryptedText);
+            case HEXA:
+                return HexaDecrypter.decrypt(encryptedText);
+            case OCTAL:
+                return OctalDecrypter.decrypt(encryptedText);
+            case ARBITRARY_RADIX:
+                return ArbitraryRadixDecrypter.decrypt(encryptedText);
+            case VIGENERE:
                 return VigenereDecrypter.decrypt(encryptedText, "SECRET_KEY");
             default:
-                throw new IllegalArgumentException("Invalid decryption type. Use 'base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des");
+                throw new IllegalArgumentException("Invalid decryption type. Use 'base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des, octal, hexa, binary, arbitary_radix, triple_des'");
         }
     }
 
     public static void displayUsage() {
         System.out.println("Usage: java -jar <jar-file-name>.jar <command> <type> <text>");
         System.out.println("Commands: encrypt, decrypt, help");
-        System.out.println("Types: base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des");
+        System.out.println("Types: base64, rot13, base16, base85, quoted_printable, ascii85, z85, vigenere, aes, rsa, des, octal, hexa, binary, arbitary_radix, triple_des");
     }
 
     public static void displayHelp() {
@@ -106,17 +151,26 @@ public class Main {
         System.out.println("java -jar <jar-file-name>.jar decrypt base64 'Khoor, Zruog!'");
     }
 
-    private static class EncryptionType {
-        public static final String BASE64 = "base64";
-        public static final String BASE16 = "base16";
-        public static final String BASE85 = "base85";
-        public static final String QUOTED_PRINTABLE = "quoted_printable";
-        public static final String ASCII85 = "ascii85";
-        public static final String Z85 = "z85";
-        public static final String ROT13 = "rot13";
-        public static final String VIGENERE = "vigenere";
-        public static final String AES = "aes";
-        public static final String RSA = "rsa";
-        public static final String DES = "des";
+    private enum EncryptionType {
+        BASE64,
+        ROT13,
+        BASE16,
+        BASE85,
+        QUOTED_PRINTABLE,
+        ASCII85,
+        Z85,
+        VIGENERE,
+        AES,
+        RSA,
+        DES,
+        TRIPLE_DES,
+        BINARY,
+        HEXA,
+        OCTAL,
+        ARBITRARY_RADIX;
+
+        public static EncryptionType fromString(String type) {
+            return valueOf(type.toUpperCase());
+        }
     }
 }
