@@ -15,6 +15,9 @@ CryptoTool is a modern encryption and decryption tool that supports various comm
 7. Vigenere Cipher
 8. Z85 Encoding
 9. Ascii85 Encoding
+10. Hexadecimal (Base16) Encoding
+11. Octal Encoding
+12. Arbitrary Radix Encoding
 
 ## How to Use (Command Line)
 
